@@ -1,13 +1,53 @@
-const client = ( () => {
+const client = (() => {
     let registrationObject;
     const btnRequestNotification = document.querySelector('.request-notification');
     const btnSendNotification = document.querySelector('.send-notification');
 
     btnRequestNotification.onclick = () => requestNotificationPermission();
 
+    const uiHandle = (status) => {
+        console.log("Notification permission status = ", status);
+
+        btnRequestNotification.style.display =
+            status === 'granted' ?
+                'none' :
+                'block';
+
+        btnSendNotification.onclick = () => sendNotification(status);
+        btnSendNotification.style.display =
+            status === 'granted' ?
+                'block' :
+                'none';
+    } // uiHandle
+
+    const sendNotification = (status) => {
+        if (status !== 'granted')
+            return;
+
+        const simpleNotification = "A simple notification";
+        const customNotification = {
+            title: "A custom notification",
+            options: {
+                body: "Body of the custom notification",
+                icon: "img/notification.png",
+                actions: [
+                    { action: "view", title: "View" },
+                ] // actions
+            } // options
+        } // customNotification
+
+        navigator.serviceWorker.getRegistration()
+            .then(registration => registration.showNotification(
+                customNotification.title,
+                customNotification.options
+            ));
+    } // sendNotification
+
     const checkNotificationSupport = () => {
         if ('Notification' in window) {
             console.info("Notification is supported.");
+
+            uiHandle(Notification.permission);
 
             return Promise.resolve("Notification is supported.");
         } // if
@@ -23,8 +63,6 @@ const client = ( () => {
                 .then(registrationResult => {
                     console.info("Service worker is registered successfully.");
                     registrationObject = registrationResult;
-
-                    btnRequestNotification.style.display = 'block';
                 }) // then
         } // if
 
@@ -33,22 +71,7 @@ const client = ( () => {
 
     const requestNotificationPermission = () => {
         return Notification.requestPermission(status => {
-            console.log("Notification permission status = ", status);
-
-            btnRequestNotification.style.display = 
-                status === 'granted' ?
-                'none' :
-                'block';
-
-            btnSendNotification.style.display =
-                status === 'granted' ?
-                'block' :
-                'none';
-            
-            btnSendNotification.onclick = () => {
-                navigator.serviceWorker.getRegistration()
-                    .then(registration => registration.showNotification('A simple notification'));
-            } // onclick
+            uiHandle(status);
         }); // requestPermission
     } // requestNotificationPermission
 

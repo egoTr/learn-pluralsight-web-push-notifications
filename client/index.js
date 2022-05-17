@@ -2,7 +2,6 @@ const client = (() => {
     let serviceWorkerObject;
     let isSubscribed = false;
     const btnRequestNotification = document.querySelector('.request-notification');
-    const btnSendNotification = document.querySelector('.send-notification');
     const btnSubscription = document.querySelector('.subscription');
     const btnSubscription_code = document.querySelector('code');
 
@@ -18,9 +17,7 @@ const client = (() => {
                 'none' :
                 'block';
 
-        btnSendNotification.onclick = () => sendNotification(status);
         btnSubscription.style.display =
-            btnSendNotification.style.display =
             status === 'granted' ?
                 'block' :
                 'none';

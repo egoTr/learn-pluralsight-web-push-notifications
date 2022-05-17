@@ -2,7 +2,21 @@
     <title>Web Push Notification</title>
 
     <style>
-        button {
+        .request-notification,
+        .send-notification {
+            display: none;
+        }
+
+        code {
+            display: block; clear: both;
+            background-color: #ccc;
+            padding: 10px;
+
+            border: solid 3px #ccc;
+            border-radius: 8px;
+            color: white;
+        }
+        code:empty {
             display: none;
         }
     </style>
@@ -10,6 +24,11 @@
 
 <body>
     <button class="request-notification">Request Notification Permission</button>
+    
+    <br/>
+    <button class="subscription">Subscribe</button>
+    <code></code>
+    
     <br/>
     <button class="send-notification">Send Notification</button>
 </body>
